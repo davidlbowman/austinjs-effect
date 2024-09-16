@@ -7,7 +7,6 @@ const program = Effect.sync(() => {
 
 // const result = Effect.runSync(program)
 
-// const simulation = Effect.runSyncExit(Effect.succeed(1))
 const simulation = Effect.runSyncExit(Effect.fail("error"))
 Exit.match(simulation, {
 	onFailure: (cause) =>
