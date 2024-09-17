@@ -10,6 +10,11 @@ class IllegalAgeError {
 	constructor(readonly age: number) {}
 }
 
+class RandomFailureError {
+	readonly _tag = "RandomFailureError"
+	constructor(readonly message: string) {}
+}
+
 const validateAge = (
 	age: number,
 ): Effect.Effect<number, NegativeAgeError | IllegalAgeError> =>
@@ -25,7 +30,7 @@ const flakyOperation = (age: number) =>
 		Effect.flatMap(() => validateAge(age)),
 		Effect.flatMap((validatedAge) =>
 			Math.random() < 0.5
-				? Effect.fail(new Error("Random failure"))
+				? Effect.fail(new RandomFailureError("Random failure"))
 				: Effect.succeed(validatedAge),
 		),
 	)
@@ -47,8 +52,8 @@ const processAge = (age: number) =>
 				if (error instanceof IllegalAgeError) {
 					return `Error: Age ${error.age} is below 18`
 				}
-				if (error instanceof Error) {
-					return `Unexpected error: ${error.message}`
+				if (error instanceof RandomFailureError) {
+					return "Error: Random failure occurred"
 				}
 				return "Unknown error occurred"
 			},
@@ -56,12 +61,7 @@ const processAge = (age: number) =>
 		Effect.orElse(() =>
 			Effect.succeed(`Fallback: Unable to process age ${age}`),
 		),
-		Effect.catchAllDefect((defect) =>
-			Cause.isRuntimeException(defect)
-				? Console.log(`RuntimeException caught: ${defect.message}`)
-				: Console.log("Unknown defect caught."),
-		),
-		Effect.flatMap((result) =>
+		Effect.tap((result) =>
 			Console.log(`Final result for age ${age}: ${result}`),
 		),
 	)
