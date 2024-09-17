@@ -50,7 +50,8 @@ const flakyOperation = (age: number) =>
 							? reject(new RandomFailureError("Random failure"))
 							: resolve(validatedAge)
 					}),
-				catch: (unknown) => new Error(`Failed to validateage: ${unknown}`),
+				catch: (unknown) =>
+					new RandomFailureError(`Failed to process age: ${unknown}`),
 			}),
 		),
 	)
@@ -62,7 +63,7 @@ const retryPolicy = Schedule.exponential("100 millis").pipe(
 const processAge = (age: number) =>
 	flakyOperation(age).pipe(
 		Effect.retry(retryPolicy),
-		Effect.timeout("3 seconds"),
+		Effect.timeout("10 seconds"),
 		Effect.match({
 			onSuccess: () => `Success: Age ${age} is valid`,
 			onFailure: (error) => {
@@ -75,12 +76,12 @@ const processAge = (age: number) =>
 				if (error instanceof RandomFailureError) {
 					return `Error: Random failure occurred - ${error.message}`
 				}
-				return "Unknown error occurred"
+				if (error instanceof Cause.TimeoutException) {
+					return `Error: Operation timed out for age ${age}`
+				}
+				return `Unknown error occurred: ${error}`
 			},
 		}),
-		Effect.orElse(() =>
-			Effect.succeed(`Fallback: Unable to process age ${age}`),
-		),
 		Effect.tap((result) =>
 			Console.log(`Final result for age ${age}: ${result}`),
 		),
