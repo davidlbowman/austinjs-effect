@@ -22,13 +22,11 @@ const validateAge = (
 const flakyOperation = (age: number) =>
 	Effect.succeed(age).pipe(
 		Effect.tap(() => Console.log(`Processing age: ${age}`)),
-		Effect.flatMap(() =>
+		Effect.flatMap(() => validateAge(age)),
+		Effect.flatMap((validatedAge) =>
 			Math.random() < 0.5
-				? (Effect.fail(new Error("Random failure")) as Effect.Effect<
-						number,
-						Error | NegativeAgeError | IllegalAgeError
-					>)
-				: validateAge(age),
+				? Effect.fail(new Error("Random failure"))
+				: Effect.succeed(validatedAge),
 		),
 	)
 
