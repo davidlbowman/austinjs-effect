@@ -29,9 +29,15 @@ const flakyOperation = (age: number) =>
 		Effect.tap(() => Console.log(`Processing age: ${age}`)),
 		Effect.flatMap(() => validateAge(age)),
 		Effect.flatMap((validatedAge) =>
-			Math.random() < 0.5
-				? Effect.fail(new RandomFailureError("Random failure"))
-				: Effect.succeed(validatedAge),
+			Effect.tryPromise({
+				try: () =>
+					new Promise<number>((resolve, reject) => {
+						Math.random() < 0.5
+							? reject(new RandomFailureError("Random failure"))
+							: resolve(validatedAge)
+					}),
+				catch: (unknown) => new Error(`Failed to validateage: ${unknown}`),
+			}),
 		),
 	)
 
@@ -53,7 +59,7 @@ const processAge = (age: number) =>
 					return `Error: Age ${error.age} is below 18`
 				}
 				if (error instanceof RandomFailureError) {
-					return "Error: Random failure occurred"
+					return `Error: Random failure occurred - ${error.message}`
 				}
 				return "Unknown error occurred"
 			},
