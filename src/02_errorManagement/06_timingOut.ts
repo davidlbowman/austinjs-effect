@@ -1,5 +1,11 @@
 import { Effect } from "effect"
 
+/*
+ * Effect.timeout is a function that allows you to timeout an effect.
+ * If the effect fails to complete within the specified timeout, the effect is interrupted.
+ * Effect.timeout is useful for preventing effects from running indefinitely.
+ */
+
 const effect = Effect.gen(function* () {
 	console.log("Starting")
 	yield* Effect.sleep(1500)

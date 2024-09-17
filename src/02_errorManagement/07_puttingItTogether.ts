@@ -1,5 +1,19 @@
 import { Cause, Console, Effect, Schedule } from "effect"
 
+/*
+ * This function demonstrates a comprehensive error management approach:
+ * 1. It takes an age as input and validates it using `validateAge`.
+ * 2. If the age is valid, it proceeds with a simulated flaky operation.
+ * 3. The operation has a 50% chance of random failure.
+ * 4. If it fails, it will retry using an exponential backoff strategy.
+ * 5. The entire process has a timeout of 3 seconds.
+ * 6. Various error types (NegativeAgeError, IllegalAgeError, RandomFailureError) are handled.
+ * 7. It uses Effect for composable and type-safe error handling.
+ * 8. Logging is incorporated to track the processing steps.
+ * This setup showcases error validation, random failures, retries, and timeouts in a single
+ * operation.
+ */
+
 class NegativeAgeError {
 	readonly _tag = "NegativeAgeError"
 	constructor(readonly age: number) {}

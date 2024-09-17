@@ -1,6 +1,10 @@
 import { Cause, Console, Effect } from "effect"
 
-// Simulating a runtime error
+/*
+ * Unexpected errors are errors that are not expected to happen in the program.
+ * They are used to handle errors in a structured way.
+ */
+
 const task = Effect.dieMessage("Boom!")
 
 const program = Effect.catchAllDefect(task, (defect) => {
@@ -10,7 +14,6 @@ const program = Effect.catchAllDefect(task, (defect) => {
 	return Console.log("Unknown defect caught.")
 })
 
-// We get an Exit.Success because we caught all defects
 Effect.runPromiseExit(program).then(console.log)
 /*
 Output:

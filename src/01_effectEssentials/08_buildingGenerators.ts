@@ -1,5 +1,11 @@
 import { Effect } from "effect"
 
+/*
+ * Effect.gen is a function that allows you to build an effect using a generator function.
+ * A generator function is a function that can yield effects to be executed.
+ * Effect.gen is useful for building effects that require sequential execution of multiple effects.
+ */
+
 const applyDiscount = (total: number, discountRate: number) =>
 	discountRate === 0
 		? Effect.fail(new Error("Discount rate cannot be zero"))

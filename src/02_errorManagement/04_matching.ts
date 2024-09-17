@@ -3,6 +3,11 @@ import { Effect } from "effect"
 const success: Effect.Effect<number, Error> = Effect.succeed(42)
 const failure: Effect.Effect<number, Error> = Effect.fail(new Error("Uh oh!"))
 
+/*
+ * Effect.match is a function that allows you to match an effect against a set of patterns.
+ * It is useful for handling effects in a structured way.
+ */
+
 const matchSuccess = Effect.match(success, {
 	onFailure: (error) => `failure: ${error.message}`,
 	onSuccess: (value) => `success: ${value}`,
@@ -16,6 +21,11 @@ const matchFailure = Effect.match(failure, {
 })
 
 Effect.runPromise(matchFailure).then(console.log) // Output: "failure: Uh oh!"
+
+/*
+ * Effect.matchEffect is a function that allows you to match an effect against a set of patterns.
+ * It is useful for handling effects in a structured way.
+ */
 
 const ignoreFailure = Effect.ignore(failure)
 Effect.runPromise(ignoreFailure).then(console.log) // Output: undefined

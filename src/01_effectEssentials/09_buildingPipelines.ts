@@ -6,6 +6,12 @@ const square = (x: number) => x ** 2
 const examplePipe = pipe(1, increment, double, square)
 // console.log(examplePipe) // 16
 
+/*
+ * Effect.pipe is a function that allows you to build an effect using a pipeline.
+ * A pipeline is a sequence of functions that are applied to the value inside the Effect.
+ * Effect.pipe is useful for building effects that require sequential execution of multiple effects.
+ */
+
 const anotherExamplePipe = pipe(
 	1,
 	(x) => x + 1,

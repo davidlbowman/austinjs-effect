@@ -1,5 +1,10 @@
 import { Effect, Random } from "effect"
 
+/*
+ * Expected errors are errors that are expected to happen in the program.
+ * They are used to handle errors in a structured way.
+ */
+
 class HttpError {
 	readonly _tag = "HttpError"
 }
@@ -20,6 +25,11 @@ const program = Effect.gen(function* () {
 })
 
 Effect.runPromise(program).then(console.log, console.error)
+
+/*
+ * Effect.catchTags is a function that allows you to catch errors by their tag.
+ * It is useful for handling errors in a structured way.
+ */
 
 const recovered = program.pipe(
 	Effect.catchTags({

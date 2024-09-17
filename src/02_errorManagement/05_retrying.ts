@@ -1,5 +1,10 @@
 import { Console, Effect, Schedule } from "effect"
 
+/*
+ * Effect.retry is a function that allows you to retry an effect a specified number of times.
+ * It is useful for retrying an effect that may fail.
+ */
+
 const simulateFailure = (maxFailures: number) => {
 	let count = 0
 	return Effect.gen(function* (_) {
@@ -12,6 +17,11 @@ const simulateFailure = (maxFailures: number) => {
 		return "Operation succeeded"
 	})
 }
+
+/*
+ * Schedule.exponential is a function that allows you to create an exponential schedule.
+ * It is useful for creating a schedule that increases the delay between retries.
+ */
 
 const retryPolicy = Schedule.exponential("100 millis").pipe(
 	Schedule.upTo("5 seconds"),
